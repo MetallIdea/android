@@ -10,9 +10,17 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.EventListener;
 
 import metal.helloword.R;
 import metal.helloword.data.AppContext;
@@ -41,25 +49,41 @@ public class SourceActivity extends Fragment {
         listView.setAdapter(adapter);
 
         editText = (EditText)myFragmentView.findViewById(R.id.editText);
-        editText.addTextChangedListener(new TextWatcher() {
-
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                if (cs.toString().length() == 0)
-                    editText.setText(cs.toString() + arg1 + arg2 + arg3);
-            }
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-            }
+                if(actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    String val = v.getText().toString();
 
-            @Override
-            public void afterTextChanged(Editable arg0) {
-            }
+                    if(val != null && !val.isEmpty()) {
+                        saveData(Double.parseDouble(val));
 
+                        SimpleCursorAdapter adapter = loadData();
+
+                        listView.setAdapter(adapter);
+
+                        v.setText("");
+                    }
+                }
+
+                return true;
+            }
         });
 
         return myFragmentView;
+    }
+
+    private void saveData(double value){
+        Coasts coasts = new Coasts(AppContext.Current.DB);
+
+        Coast coast = new Coast();
+        coast.Sum = value;
+        coast.Category = "Test";
+        coast.DateCoast = new Date();
+
+        coasts.InsertCoast(coast);
     }
 
     private SimpleCursorAdapter loadData() {
@@ -70,7 +94,7 @@ public class SourceActivity extends Fragment {
 
             return new SimpleCursorAdapter(getActivity().getApplicationContext(),
                     android.R.layout.simple_list_item_2, cursor,
-                    new String[]{Coasts._ID, Coasts.FIELD_SUM},
+                    new String[]{Coasts.FIELD_DATE, Coasts.FIELD_SUM},
                     new int[]{android.R.id.text1, android.R.id.text2}, 0);
 
             //cursor.close();

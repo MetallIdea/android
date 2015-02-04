@@ -35,7 +35,10 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onStop(){
+
         AppContext.Current.Close();
+
+        super.onStop();
     }
 
 

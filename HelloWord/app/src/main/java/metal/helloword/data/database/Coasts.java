@@ -5,7 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by smetalnikov on 03.02.2015.
@@ -36,12 +38,13 @@ public class Coasts extends BaseTable{
         ArrayList<Coast> returnValues = new ArrayList<>();
 
         return GetItems(Coasts.TABLE_NAME, new String[] {
-                Coasts._ID, Coasts.FIELD_SUM }, null, null);
+                Coasts._ID, Coasts.FIELD_SUM, Coasts.FIELD_DATE }, null, null);
     }
 
     public void InsertCoast(Coast coast){
         ContentValues cv = new ContentValues();
         cv.put(Coasts.FIELD_SUM, coast.Sum);
+        cv.put(Coasts.FIELD_DATE, new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(coast.DateCoast));
 
         InsertItem(Coasts.TABLE_NAME, cv);
     }
