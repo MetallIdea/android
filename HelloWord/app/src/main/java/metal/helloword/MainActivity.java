@@ -1,26 +1,18 @@
 package metal.helloword;
 
-import android.app.TabActivity;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabaseLockedException;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+
+import java.text.SimpleDateFormat;
 
 import metal.helloword.data.AppContext;
-import metal.helloword.data.database.Coast;
-import metal.helloword.data.database.Coasts;
-import metal.helloword.data.database.DBContext;
 
 
 public class MainActivity extends FragmentActivity {
+
     private FragmentTabHost tabHost;
 
     @Override
@@ -29,15 +21,15 @@ public class MainActivity extends FragmentActivity {
 
         AppContext.Current = new AppContext(this);
 
-        setView();
+        setContentView(R.layout.activity_main);
+
+        createTabs();
     }
 
 
     @Override
     protected void onStop(){
-
         AppContext.Current.Close();
-
         super.onStop();
     }
 
@@ -65,8 +57,7 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    private void setView() {
-        setContentView(R.layout.activity_main);
+    private void createTabs() {
 
         tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);

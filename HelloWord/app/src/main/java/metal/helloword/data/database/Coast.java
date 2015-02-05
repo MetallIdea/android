@@ -19,11 +19,18 @@ public class Coast {
 
     public double Sum;
 
+    public Coast() {
+    }
+
     public Coast(Cursor cursor) {
+        this.ID = cursor.getInt(cursor.getColumnIndex(Coasts.FIELD_SUM));
+
         this.Sum = cursor.getDouble(cursor.getColumnIndex(Coasts.FIELD_SUM));
 
+        this.Category = cursor.getString(cursor.getColumnIndex(Coasts.FIELD_CATEGORY));
+
         try{
-            this.DateCoast = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(
+            this.DateCoast = DBContext.DATA_FORMAT.parse(
                     cursor.getString(cursor.getColumnIndex(Coasts.FIELD_DATE)));
         }catch (ParseException e){
             this.DateCoast = null;

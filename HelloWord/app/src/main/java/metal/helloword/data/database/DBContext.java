@@ -7,13 +7,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by smetalnikov on 03.02.2015.
  */
 public class DBContext extends SQLiteOpenHelper {
 
+    public static final SimpleDateFormat DATA_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     private static final String DATABASE_NAME = "cat_database.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 6;
 
     public SQLiteDatabase DataBase;
 
