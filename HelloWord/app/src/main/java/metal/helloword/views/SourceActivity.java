@@ -2,6 +2,7 @@ package metal.helloword.views;
 
 import android.content.Entity;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import metal.helloword.MainActivity;
 import metal.helloword.R;
@@ -43,6 +45,9 @@ public class SourceActivity extends Fragment {
 
     public static final SimpleDateFormat DATA_FORMAT_VIEW = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
+    protected CoastsLoad coastLoadTask;
+
+    protected SimpleAdapter adapter;
 
     protected ListView listView;
 
@@ -67,7 +72,6 @@ public class SourceActivity extends Fragment {
 
         editText = (EditText)myFragmentView.findViewById(R.id.editText);
 
-        loadData();
 
         // Обработка нажатия клавиши Done (Готово). После которой происходит отсылка результатов.
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -91,6 +95,9 @@ public class SourceActivity extends Fragment {
                 return true;
             }
         });
+
+        coastLoadTask = new CoastsLoad();
+        coastLoadTask.execute();
 
         return myFragmentView;
     }
@@ -125,12 +132,11 @@ public class SourceActivity extends Fragment {
 
             cursor.close();
 
-            SimpleAdapter adapter = new SimpleAdapter(getActivity().getApplicationContext(), coastList,
+            adapter = new SimpleAdapter(getActivity().getApplicationContext(), coastList,
                     android.R.layout.simple_list_item_2,
                     new String[]{"Value", "Category"},
                     new int[]{android.R.id.text1, android.R.id.text2});
 
-            listView.setAdapter(adapter);
 
         }catch (Exception e){
             Log.w("LOG_TAG", e.getMessage());
@@ -147,5 +153,29 @@ public class SourceActivity extends Fragment {
         Coasts coasts = new Coasts();
 
         coasts.InsertCoast(coast);
+    }
+
+    class CoastsLoad extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                loadData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            listView.setAdapter(adapter);
+        }
     }
 }
