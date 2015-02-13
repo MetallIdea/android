@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".views.CategoriesViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
+        </service>
         <receiver
             android:name=".widget.CategoryWidget"
             android:icon="@android:drawable/star_big_on"

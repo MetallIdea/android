@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.text.SimpleDateFormat;
-
 import metal.helloword.data.AppContext;
 
 
@@ -19,20 +17,29 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AppContext.Current = new AppContext(this);
-
         setContentView(R.layout.activity_main);
 
         createTabs();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
     @Override
     protected void onStop(){
-        AppContext.Current.Close();
+        AppContext.Current.close();
+
         super.onStop();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        AppContext.Current = new AppContext(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

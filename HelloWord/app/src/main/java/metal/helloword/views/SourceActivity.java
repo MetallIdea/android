@@ -86,6 +86,8 @@ public class SourceActivity extends Fragment {
 
                         loadData();
 
+                        listView.setAdapter(adapter);
+
                         editText.setText("");
 
                         editText.requestFocus();
@@ -96,10 +98,15 @@ public class SourceActivity extends Fragment {
             }
         });
 
+        return myFragmentView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
         coastLoadTask = new CoastsLoad();
         coastLoadTask.execute();
-
-        return myFragmentView;
     }
 
     @Override

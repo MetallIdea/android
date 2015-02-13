@@ -3,15 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TextView
-        android:id="@+id/tv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#6600ff00"
-        android:gravity="center"
-        android:text="@string/widget_text"
-        android:textColor="#000"
-        android:textSize="18sp">
-    </TextView>
+    android:background="#9999"
+    android:padding="5dp">
+        <TextView
+            android:id="@+id/categoryNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/new_category"/>
+        <ListView
+            android:id="@+id/categoriesView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/categoryNew"></ListView>
 </RelativeLayout>

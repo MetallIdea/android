@@ -22,9 +22,14 @@ public class AppContext {
         DB = DBContext.getWritableDatabase();
     }
 
-    public void Close(){
-        DB.close();
+    public void close(){
+
+        if(DB.isOpen())
+        {
+            DB.close();
+        }
 
         DBContext.close();
+
     }
 }

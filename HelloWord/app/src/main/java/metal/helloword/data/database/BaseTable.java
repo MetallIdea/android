@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
+import metal.helloword.data.AppContext;
+
 /**
  * Created by smetalnikov on 03.02.2015.
  */
@@ -12,8 +14,11 @@ public class BaseTable implements BaseColumns {
 
     public SQLiteDatabase DataBase;
 
-    public BaseTable(SQLiteDatabase dataBase) {
+    public BaseTable() {
+        this(AppContext.Current.DB);
+    }
 
+    public BaseTable(SQLiteDatabase dataBase) {
         DataBase = dataBase;
     }
 
