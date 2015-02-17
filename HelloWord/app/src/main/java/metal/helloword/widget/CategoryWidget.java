@@ -99,6 +99,6 @@ public class CategoryWidget extends AppWidgetProvider {
         listClickIntent.putExtra(ACTION_ON_CLICK, "");
         PendingIntent listClickPIntent = PendingIntent.getBroadcast(context, appWidgetId,
                 listClickIntent, 0);
-        rv.setPendingIntentTemplate(R.id.categoryNew, listClickPIntent);
+        //rv.setPendingIntentTemplate(R.id.categoryNew, listClickPIntent);
     }
 }

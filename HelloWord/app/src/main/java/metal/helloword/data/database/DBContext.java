@@ -16,15 +16,19 @@ public class DBContext extends SQLiteOpenHelper {
 
     public static final SimpleDateFormat DATA_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     private static final String DATABASE_NAME = "cat_database.db";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 14;
 
     public SQLiteDatabase DataBase;
+
+    public Categories categories;
 
     public DBContext(Context context) {
         // TODO Auto-generated constructor stub
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         DataBase = this.getWritableDatabase();
+
+        categories = new Categories(DataBase);
     }
 
     @Override
@@ -32,7 +36,7 @@ public class DBContext extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         db.execSQL(Coasts.SQL_CREATE_ENTRIES);
 
-        db.execSQL(Categories.SQL_CREATE_ENTRIES);
+        categories.createTable();
     }
 
     @Override

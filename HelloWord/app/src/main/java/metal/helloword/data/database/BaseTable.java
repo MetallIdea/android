@@ -4,13 +4,14 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
+import android.provider.ContactsContract;
 
 import metal.helloword.data.AppContext;
 
 /**
  * Created by smetalnikov on 03.02.2015.
  */
-public class BaseTable implements BaseColumns {
+public abstract class BaseTable implements BaseColumns {
 
     public SQLiteDatabase DataBase;
 
@@ -20,6 +21,12 @@ public class BaseTable implements BaseColumns {
 
     public BaseTable(SQLiteDatabase dataBase) {
         DataBase = dataBase;
+    }
+
+    public abstract void createTable();
+
+    public void query(String sqlQuery){
+        DataBase.execSQL(sqlQuery);
     }
 
     public void InsertItem(String tableName, ContentValues values) {

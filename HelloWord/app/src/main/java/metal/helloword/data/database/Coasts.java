@@ -33,9 +33,15 @@ public class Coasts extends BaseTable{
     public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS "
             + TABLE_NAME;
 
+    @Override
+    public void createTable() {
+
+    }
+
     /**
      * Берет по умолчанию базу из текущего контекста приложения.
      */
+
 
     public Cursor GetCoasts() {
         return GetItems(Coasts.TABLE_NAME, new String[] {

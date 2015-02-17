@@ -5,14 +5,8 @@
     android:layout_height="match_parent"
     android:background="#9999"
     android:padding="5dp">
-        <TextView
-            android:id="@+id/categoryNew"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/new_category"/>
         <ListView
             android:id="@+id/categoriesView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@+id/categoryNew"></ListView>
+            android:layout_height="fill_parent"></ListView>
 </RelativeLayout>

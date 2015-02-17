@@ -26,6 +26,9 @@ public class Categories extends BaseTable {
             FIELD_HIT_COUNTS + " INTEGER" +
             ");";
 
+    public static final String SQL_INSERT_VALUES = "INSERT INTO " +
+            TABLE_NAME + " VALUES ('', '%1$s', 0, 0);";
+
     public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS "
             + TABLE_NAME;
 
@@ -38,6 +41,17 @@ public class Categories extends BaseTable {
 
     public Categories(SQLiteDatabase db){
         super(db);
+    }
+
+    @Override
+    public void createTable() {
+        query(SQL_CREATE_ENTRIES);
+
+        query(String.format(SQL_INSERT_VALUES, "Машина"));
+
+        query(String.format(SQL_INSERT_VALUES, "Продукты"));
+
+        query(String.format(SQL_INSERT_VALUES, "Ремонт"));
     }
 
     public ArrayList<Category> GetCategories() {
