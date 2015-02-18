@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.Arrays;
 
+import metal.helloword.MainActivity;
 import metal.helloword.R;
 import metal.helloword.data.AppContext;
 import metal.helloword.views.CategoriesViewService;
@@ -23,9 +24,13 @@ public class CategoryWidget extends AppWidgetProvider {
 
     final String LOG_TAG = "myLogs";
 
-    final String ACTION_ON_CLICK = "ru.startandroid.develop.p1211listwidget.itemonclick";
+    // String to be sent on Broadcast as soon as Data is Fetched
+    // should be included on WidgetProvider manifest intent action
+    // to be recognized by this WidgetProvider to receive broadcast
+    public static final String DATA_FETCHED = "mypackage.RSS.DATA_FETCHED";
+    public static final String EXTRA_LIST_VIEW_ROW_NUMBER = "mypackage.EXTRA_LIST_VIEW_ROW_NUMBER";
 
-    final static String ITEM_POSITION = "item_position";
+    public static final String CATEGORY_EXTRA_NAME = "METALIDEA.DIALYIDEA.CATEGORY_EXTRA_NAME";
 
     @Override
     public void onEnabled(Context context) {
@@ -65,8 +70,20 @@ public class CategoryWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        if (intent.getAction().equalsIgnoreCase(ACTION_ON_CLICK)) {
-            Toast.makeText(context, "Clicked on item ",
+        Log.d(LOG_TAG, "onReceive");
+        //if item on list was clicked
+        if (intent.getAction().equals(EXTRA_LIST_VIEW_ROW_NUMBER)) {
+            int appWidgetId = intent.getIntExtra(
+                    AppWidgetManager.EXTRA_APPWIDGET_ID,
+                    AppWidgetManager.INVALID_APPWIDGET_ID);
+
+            AppWidgetManager appWidgetManager = AppWidgetManager
+                    .getInstance(context);
+
+            //get position on listview which was clicked
+            int viewIndex = intent.getIntExtra(EXTRA_LIST_VIEW_ROW_NUMBER, 0);
+
+            Toast.makeText(context, "Clicked on position :" + viewIndex + " WidgetID " + appWidgetId,
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -92,13 +109,8 @@ public class CategoryWidget extends AppWidgetProvider {
     }
 
     void setListClick(RemoteViews rv, Context context, int appWidgetId) {
-        Intent listClickIntent = new Intent(context, CategoryWidget.class);
-        listClickIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        listClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
-                new int[] { appWidgetId });
-        listClickIntent.putExtra(ACTION_ON_CLICK, "");
-        PendingIntent listClickPIntent = PendingIntent.getBroadcast(context, appWidgetId,
-                listClickIntent, 0);
-        //rv.setPendingIntentTemplate(R.id.categoryNew, listClickPIntent);
+        Intent startActivityIntent = new Intent(context, MainActivity.class);
+        PendingIntent startActivityPendingIntent = PendingIntent.getActivity(context, 0, startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setPendingIntentTemplate(R.id.categoriesView, startActivityPendingIntent);
     }
 }

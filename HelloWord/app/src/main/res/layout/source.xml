@@ -13,6 +13,13 @@
         android:singleLine="true"
         android:imeOptions="actionDone"/>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/category"
+        android:singleLine="true"
+        android:imeOptions="actionDone" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

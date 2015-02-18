@@ -14,6 +14,7 @@ import metal.helloword.R;
 import metal.helloword.data.AppContext;
 import metal.helloword.data.database.Categories;
 import metal.helloword.data.database.Category;
+import metal.helloword.widget.CategoryWidget;
 
 /**
  * Created by smetalnikov on 12.02.2015.
@@ -53,10 +54,17 @@ public class CategoriesFactory implements RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews rView = new RemoteViews(context.getPackageName(),
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                 R.layout.category_item);
-        rView.setTextViewText(R.id.tvItemText, data.get(position).Name);
-        return rView;
+        remoteViews.setTextViewText(R.id.tvItemText, data.get(position).Name);
+
+        //onclick item listview
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtra(CategoryWidget.EXTRA_LIST_VIEW_ROW_NUMBER, position);
+        fillInIntent.putExtra(CategoryWidget.CATEGORY_EXTRA_NAME, data.get(position).Name);
+        remoteViews.setOnClickFillInIntent(R.id.tvItemText, fillInIntent);
+
+        return remoteViews;
     }
 
     @Override

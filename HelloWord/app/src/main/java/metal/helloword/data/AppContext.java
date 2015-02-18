@@ -13,6 +13,8 @@ public class AppContext {
 
     public SQLiteDatabase DB;
 
+    public Settings settings;
+
     public static AppContext Current;
 
     public AppContext(Context context) {

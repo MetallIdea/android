@@ -44,4 +44,8 @@ public abstract class BaseTable implements BaseColumns {
 
         return cursor;
     }
+
+    public int updateItem(String tableName, ContentValues values, int id){
+        return DataBase.update(tableName, values, "_id " + "=" + id, null);
+    }
 }

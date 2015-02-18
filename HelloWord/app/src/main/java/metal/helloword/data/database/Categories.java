@@ -27,7 +27,7 @@ public class Categories extends BaseTable {
             ");";
 
     public static final String SQL_INSERT_VALUES = "INSERT INTO " +
-            TABLE_NAME + " VALUES ('', '%1$s', 0, 0);";
+            TABLE_NAME + " VALUES (null, '%1$s', 0, 0);";
 
     public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS "
             + TABLE_NAME;
@@ -52,6 +52,14 @@ public class Categories extends BaseTable {
         query(String.format(SQL_INSERT_VALUES, "Продукты"));
 
         query(String.format(SQL_INSERT_VALUES, "Ремонт"));
+
+        query(String.format(SQL_INSERT_VALUES, "Одежда"));
+
+        query(String.format(SQL_INSERT_VALUES, "Телефон"));
+
+        query(String.format(SQL_INSERT_VALUES, "Подарки"));
+
+        query(String.format(SQL_INSERT_VALUES, "Зарплата"));
     }
 
     public ArrayList<Category> GetCategories() {

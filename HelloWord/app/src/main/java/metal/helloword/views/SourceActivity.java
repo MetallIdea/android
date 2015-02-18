@@ -37,6 +37,7 @@ import metal.helloword.R;
 import metal.helloword.data.AppContext;
 import metal.helloword.data.database.Coast;
 import metal.helloword.data.database.Coasts;
+import metal.helloword.widget.CategoryWidget;
 
 /**
  * Created by smetalnikov on 03.02.2015.
@@ -45,6 +46,8 @@ public class SourceActivity extends Fragment {
 
     public static final SimpleDateFormat DATA_FORMAT_VIEW = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
+    private String categoryName;
+
     protected CoastsLoad coastLoadTask;
 
     protected SimpleAdapter adapter;
@@ -52,6 +55,8 @@ public class SourceActivity extends Fragment {
     protected ListView listView;
 
     protected EditText editText;
+
+    protected EditText categoryText;
 
     /**
      * Инициализирует элементы. Загружает занчения.
@@ -67,10 +72,20 @@ public class SourceActivity extends Fragment {
         View myFragmentView = inflater.inflate(R.layout.source,
                 container, false);
 
+        Bundle parameters = getArguments();
+
+        if(parameters != null) {
+            categoryName = parameters.getString(CategoryWidget.CATEGORY_EXTRA_NAME);
+        }
+
         listView = (ListView)myFragmentView.findViewById(R.id.listView);
         listView.setTextFilterEnabled(true);
 
         editText = (EditText)myFragmentView.findViewById(R.id.editText);
+
+        categoryText = (EditText) myFragmentView.findViewById(R.id.category);
+
+        categoryText.setText(categoryName);
 
 
         // Обработка нажатия клавиши Done (Готово). После которой происходит отсылка результатов.
@@ -80,9 +95,11 @@ public class SourceActivity extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String val = editText.getText().toString();
 
+                    String categoryName = categoryText.getText().toString();
+
                     if(val != null && !val.isEmpty()){
 
-                        saveValue(Double.parseDouble(val));
+                        saveValue(Double.parseDouble(val), categoryName);
 
                         loadData();
 
@@ -131,8 +148,8 @@ public class SourceActivity extends Fragment {
 
                 Coast coast = new Coast(cursor);
 
-                coastMap.put("Value", SourceActivity.DATA_FORMAT_VIEW.format(coast.DateCoast) + " " + coast.Sum);
-                coastMap.put("Category", coast.Category);
+                coastMap.put("Value", new SimpleDateFormat("dd.MM").format(coast.DateCoast) + " " + coast.Sum);
+                coastMap.put("Category", new SimpleDateFormat("HH:mm").format(coast.DateCoast) + " " + coast.Category);
 
                 coastList.add(coastMap);
             }
@@ -150,11 +167,11 @@ public class SourceActivity extends Fragment {
         }
     }
 
-    private void saveValue(double value)
+    private void saveValue(double value, String categoryName)
     {
         Coast coast = new Coast();
         coast.Sum = value;
-        coast.Category = "Test";
+        coast.Category = categoryName;
         coast.DateCoast = new Date();
 
         Coasts coasts = new Coasts();

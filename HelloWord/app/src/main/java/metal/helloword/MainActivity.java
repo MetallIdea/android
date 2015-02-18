@@ -3,21 +3,37 @@ package metal.helloword;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import metal.helloword.data.AppContext;
+import metal.helloword.widget.CategoryWidget;
 
 
 public class MainActivity extends FragmentActivity {
 
+    String LOG_TAG = "MainActivity";
+
     private FragmentTabHost tabHost;
+
+    private String categoryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(LOG_TAG, "onCreate");
+
         setContentView(R.layout.activity_main);
+
+        Bundle parameters = getIntent().getExtras();
+
+        if(parameters != null) {
+            categoryName = parameters.getString(CategoryWidget.CATEGORY_EXTRA_NAME);
+        }
+
+        Log.d(LOG_TAG, "recaive categoryName = " + categoryName);
 
         createTabs();
     }
@@ -25,6 +41,8 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        Log.d(LOG_TAG, "onResume");
     }
 
     @Override
@@ -32,11 +50,13 @@ public class MainActivity extends FragmentActivity {
         AppContext.Current.close();
 
         super.onStop();
+        Log.d(LOG_TAG, "onStop");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(LOG_TAG, "onStart");
 
         AppContext.Current = new AppContext(this);
     }
@@ -69,10 +89,13 @@ public class MainActivity extends FragmentActivity {
         tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
+        Bundle params = new Bundle();
+        params.putString(CategoryWidget.CATEGORY_EXTRA_NAME, categoryName);
+
         tabHost.addTab(tabHost.newTabSpec("source1").setIndicator("Нал"),
-               metal.helloword.views.SourceActivity.class, null);
+               metal.helloword.views.SourceActivity.class, params);
 
         tabHost.addTab(tabHost.newTabSpec("source2").setIndicator("Карта"),
-                metal.helloword.views.SourceActivity.class, null);
+                metal.helloword.views.SourceActivity.class, params);
     }
 }
