@@ -45,7 +45,7 @@ public class Coasts extends BaseTable{
 
     public Cursor GetCoasts() {
         return GetItems(Coasts.TABLE_NAME, new String[] {
-                Coasts._ID, Coasts.FIELD_SUM, Coasts.FIELD_DATE, Coasts.FIELD_CATEGORY }, null, null);
+                Coasts._ID, Coasts.FIELD_SUM, Coasts.FIELD_DATE, Coasts.FIELD_CATEGORY }, null, null, Coasts.FIELD_DATE + " DESC");
     }
 
     public void InsertCoast(Coast coast){

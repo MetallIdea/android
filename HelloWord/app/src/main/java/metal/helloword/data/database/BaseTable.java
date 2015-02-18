@@ -33,13 +33,13 @@ public abstract class BaseTable implements BaseColumns {
         DataBase.insert(tableName, null, values);
     }
 
-    public Cursor GetItems(String tableName, String[] fields, String whereFields, String[] whereValues) {
+    public Cursor GetItems(String tableName, String[] fields, String whereFields, String[] whereValues, String orderBy) {
         Cursor cursor = DataBase.query(tableName, fields,
                 whereFields, // The columns for the WHERE clause
                 whereValues, // The values for the WHERE clause
                 null, // don't group the rows
                 null, // don't filter by row groups
-                null // The sort order
+                orderBy // The sort order
         );
 
         return cursor;

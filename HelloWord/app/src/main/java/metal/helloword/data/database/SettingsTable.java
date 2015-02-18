@@ -54,7 +54,7 @@ public class SettingsTable extends BaseTable {
 
     public Settings getCurrent() {
 
-        Cursor cursor = this.GetItems(TABLE_NAME, new String[] { "Type", "Value"}, null, null);
+        Cursor cursor = this.GetItems(TABLE_NAME, new String[] { "Type", "Value"}, null, null, null);
 
         if(cursor.moveToNext()) {
 

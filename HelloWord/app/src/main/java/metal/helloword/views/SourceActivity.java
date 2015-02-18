@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
@@ -46,7 +47,7 @@ public class SourceActivity extends Fragment {
 
     public static final SimpleDateFormat DATA_FORMAT_VIEW = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
-    private String categoryName;
+    private String baseCategoryName;
 
     protected CoastsLoad coastLoadTask;
 
@@ -75,7 +76,7 @@ public class SourceActivity extends Fragment {
         Bundle parameters = getArguments();
 
         if(parameters != null) {
-            categoryName = parameters.getString(CategoryWidget.CATEGORY_EXTRA_NAME);
+            baseCategoryName = parameters.getString(CategoryWidget.CATEGORY_EXTRA_NAME);
         }
 
         listView = (ListView)myFragmentView.findViewById(R.id.listView);
@@ -85,7 +86,7 @@ public class SourceActivity extends Fragment {
 
         categoryText = (EditText) myFragmentView.findViewById(R.id.category);
 
-        categoryText.setText(categoryName);
+        categoryText.setText(baseCategoryName);
 
 
         // Обработка нажатия клавиши Done (Готово). После которой происходит отсылка результатов.
@@ -107,7 +108,13 @@ public class SourceActivity extends Fragment {
 
                         editText.setText("");
 
-                        editText.requestFocus();
+                        if(baseCategoryName != null){
+                            Toast.makeText(getActivity().getApplicationContext(), categoryName + ": " + val,
+                                    Toast.LENGTH_SHORT).show();
+                            getActivity().finish();
+                        }else {
+                            editText.requestFocus();
+                        }
                     }
                 }
 

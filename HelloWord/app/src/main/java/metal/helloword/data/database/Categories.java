@@ -66,7 +66,7 @@ public class Categories extends BaseTable {
         ArrayList<Category> categories = new ArrayList<>();
 
         Cursor cursor = GetItems(TABLE_NAME, new String[] {
-                _ID, FIELD_NAME, FIELD_PRIORITY, FIELD_HIT_COUNTS }, null, null);
+                _ID, FIELD_NAME, FIELD_PRIORITY, FIELD_HIT_COUNTS }, null, null, null);
 
         while (cursor.moveToNext()){
             categories.add(new Category(cursor));
