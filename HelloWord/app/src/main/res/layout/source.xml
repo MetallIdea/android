@@ -13,12 +13,31 @@
         android:singleLine="true"
         android:imeOptions="actionDone"/>
 
-    <EditText
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/category"
+            android:singleLine="true"
+            android:imeOptions="actionDone" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/dateText" />
+    </LinearLayout>
+
+    <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/category"
-        android:singleLine="true"
-        android:imeOptions="actionDone" />
+        android:id="@+id/daySeek"
+        android:splitTrack="false"
+        android:max="7"
+        android:longClickable="false" />
 
     <ListView
         android:layout_width="match_parent"

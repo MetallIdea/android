@@ -16,6 +16,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -24,13 +25,17 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import metal.helloword.MainActivity;
@@ -53,11 +58,15 @@ public class SourceActivity extends Fragment {
 
     protected SimpleAdapter adapter;
 
-    protected ListView listView;
-
     protected EditText editText;
 
     protected EditText categoryText;
+
+    protected EditText dateText;
+
+    protected SeekBar daySeek;
+
+    protected ListView listView;
 
     /**
      * Инициализирует элементы. Загружает занчения.
@@ -73,21 +82,24 @@ public class SourceActivity extends Fragment {
         View myFragmentView = inflater.inflate(R.layout.source,
                 container, false);
 
+        // Получение контролов со страницы
+        initControls(myFragmentView, inflater, container);
+
+        // Получение параметров активности
         Bundle parameters = getArguments();
 
         if(parameters != null) {
             baseCategoryName = parameters.getString(CategoryWidget.CATEGORY_EXTRA_NAME);
         }
 
-        listView = (ListView)myFragmentView.findViewById(R.id.listView);
+        // Инициализация контролов
         listView.setTextFilterEnabled(true);
-
-        editText = (EditText)myFragmentView.findViewById(R.id.editText);
-
-        categoryText = (EditText) myFragmentView.findViewById(R.id.category);
 
         categoryText.setText(baseCategoryName);
 
+        dateText.setText(GregorianCalendar.getInstance().getTime().toString());
+
+        daySeek.setProgress(GregorianCalendar.getInstance().get(Calendar.DAY_OF_WEEK)-2);
 
         // Обработка нажатия клавиши Done (Готово). После которой происходит отсылка результатов.
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -98,9 +110,11 @@ public class SourceActivity extends Fragment {
 
                     String categoryName = categoryText.getText().toString();
 
+                    int day = daySeek.getProgress() + 1;
+
                     if(val != null && !val.isEmpty()){
 
-                        saveValue(Double.parseDouble(val), categoryName);
+                        saveValue(Double.parseDouble(val), categoryName, day);
 
                         loadData();
 
@@ -140,6 +154,18 @@ public class SourceActivity extends Fragment {
         editText.requestFocus();
     }
 
+    protected void initControls(View myFragmentView, LayoutInflater inflater, ViewGroup container){
+        listView = (ListView)myFragmentView.findViewById(R.id.listView);
+
+        editText = (EditText)myFragmentView.findViewById(R.id.editText);
+
+        categoryText = (EditText) myFragmentView.findViewById(R.id.category);
+
+        dateText = (EditText) myFragmentView.findViewById(R.id.dateText);
+
+        daySeek = (SeekBar) myFragmentView.findViewById(R.id.daySeek);
+    }
+
     private void loadData() {
         try {
             Coasts coasts = new Coasts();
@@ -174,18 +200,34 @@ public class SourceActivity extends Fragment {
         }
     }
 
-    private void saveValue(double value, String categoryName)
+    private void saveValue(double value, String categoryName, int day)
     {
         Coast coast = new Coast();
         coast.Sum = value;
         coast.Category = categoryName;
-        coast.DateCoast = new Date();
+
+        GregorianCalendar today = new GregorianCalendar();
+        today.setFirstDayOfWeek(Calendar.MONDAY);
+        int currentDay = today.get(Calendar.DAY_OF_WEEK)-1;
+
+        if(currentDay>day){
+            today.set(Calendar.DAY_OF_WEEK, day + 1);
+        }else if(currentDay<day){
+            int selectedDay = today.get(Calendar.DAY_OF_MONTH) + day - currentDay;
+            today.set(Calendar.DAY_OF_MONTH, selectedDay - 7);
+        }
+
+        coast.DateCoast = today.getTime();
 
         Coasts coasts = new Coasts();
 
         coasts.InsertCoast(coast);
     }
 
+    /**
+     * TODO: Вынести в отдельный класс и передавать только методы.
+     *
+     */
     class CoastsLoad extends AsyncTask<Void, Void, Void> {
 
         @Override
