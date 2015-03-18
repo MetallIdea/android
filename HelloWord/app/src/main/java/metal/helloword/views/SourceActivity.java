@@ -1,5 +1,6 @@
 package metal.helloword.views;
 
+import android.content.Context;
 import android.content.Entity;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -22,6 +23,9 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.impl.cookie.DateParseException;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -50,22 +54,31 @@ import metal.helloword.widget.CategoryWidget;
  */
 public class SourceActivity extends Fragment {
 
+    // Формат для отображения даты в платежах
     public static final SimpleDateFormat DATA_FORMAT_VIEW = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
+    // Присланная извне категория
     private String baseCategoryName;
 
+    // Асинхронное задание загрузки платежей
     protected CoastsLoad coastLoadTask;
 
+    // Адаптер для загрузки платежей
     protected SimpleAdapter adapter;
 
+    // Текст с суммой
     protected EditText editText;
 
+    // Текст с категорией
     protected EditText categoryText;
 
+    // Текст с датой
     protected EditText dateText;
 
+    // Ползунок для выбора даты
     protected SeekBar daySeek;
 
+    // Список для отображения расходов
     protected ListView listView;
 
     /**
@@ -97,9 +110,39 @@ public class SourceActivity extends Fragment {
 
         categoryText.setText(baseCategoryName);
 
-        dateText.setText(GregorianCalendar.getInstance().getTime().toString());
+        dateText.setText(DATA_FORMAT_VIEW.format(GregorianCalendar.getInstance().getTime()));
 
         daySeek.setProgress(GregorianCalendar.getInstance().get(Calendar.DAY_OF_WEEK)-2);
+
+        daySeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                GregorianCalendar today = new GregorianCalendar();
+                today.setFirstDayOfWeek(Calendar.MONDAY);
+                int currentDay = today.get(Calendar.DAY_OF_WEEK)-1;
+
+                int day = seekBar.getProgress() + 1;
+
+                if(currentDay>day){
+                    today.set(Calendar.DAY_OF_WEEK, day + 1);
+                }else if(currentDay<day){
+                    int selectedDay = today.get(Calendar.DAY_OF_MONTH) + day - currentDay;
+                    today.set(Calendar.DAY_OF_MONTH, selectedDay - 7);
+                }
+                dateText.setText(DATA_FORMAT_VIEW.format(today.getTime()));
+            }
+        });
 
         // Обработка нажатия клавиши Done (Готово). После которой происходит отсылка результатов.
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -110,25 +153,31 @@ public class SourceActivity extends Fragment {
 
                     String categoryName = categoryText.getText().toString();
 
-                    int day = daySeek.getProgress() + 1;
+                    try {
+                        Date day = DATA_FORMAT_VIEW.parse(dateText.getText().toString());
 
-                    if(val != null && !val.isEmpty()){
 
-                        saveValue(Double.parseDouble(val), categoryName, day);
+                        if (val != null && !val.isEmpty()) {
 
-                        loadData();
+                            saveValue(Double.parseDouble(val), categoryName, day);
 
-                        listView.setAdapter(adapter);
+                            loadData();
 
-                        editText.setText("");
+                            listView.setAdapter(adapter);
 
-                        if(baseCategoryName != null){
-                            Toast.makeText(getActivity().getApplicationContext(), categoryName + ": " + val,
-                                    Toast.LENGTH_SHORT).show();
-                            getActivity().finish();
-                        }else {
-                            editText.requestFocus();
+                            editText.setText("");
+
+                            if (baseCategoryName != null) {
+                                Toast.makeText(getActivity().getApplicationContext(), categoryName + ": " + val,
+                                        Toast.LENGTH_SHORT).show();
+                                getActivity().finish();
+                            } else {
+                                editText.requestFocus();
+                            }
                         }
+                    }catch (ParseException e){
+                        Toast.makeText(getActivity().getApplicationContext(), e.toString(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -200,24 +249,15 @@ public class SourceActivity extends Fragment {
         }
     }
 
-    private void saveValue(double value, String categoryName, int day)
+    private void saveValue(double value, String categoryName, Date day)
     {
         Coast coast = new Coast();
+
         coast.Sum = value;
+
         coast.Category = categoryName;
 
-        GregorianCalendar today = new GregorianCalendar();
-        today.setFirstDayOfWeek(Calendar.MONDAY);
-        int currentDay = today.get(Calendar.DAY_OF_WEEK)-1;
-
-        if(currentDay>day){
-            today.set(Calendar.DAY_OF_WEEK, day + 1);
-        }else if(currentDay<day){
-            int selectedDay = today.get(Calendar.DAY_OF_MONTH) + day - currentDay;
-            today.set(Calendar.DAY_OF_MONTH, selectedDay - 7);
-        }
-
-        coast.DateCoast = today.getTime();
+        coast.DateCoast = day;
 
         Coasts coasts = new Coasts();
 

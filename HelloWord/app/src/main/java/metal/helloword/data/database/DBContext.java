@@ -16,9 +16,9 @@ import metal.helloword.data.Settings;
  */
 public class DBContext extends SQLiteOpenHelper {
 
-    public static final SimpleDateFormat DATA_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    public static final SimpleDateFormat DATA_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final String DATABASE_NAME = "cat_database.db";
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
 
     public SQLiteDatabase DataBase;
 
