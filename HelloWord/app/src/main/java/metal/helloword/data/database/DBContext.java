@@ -46,14 +46,25 @@ public class DBContext extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
         Log.w("LOG_TAG", "Обновление базы данных с версии " + oldVersion
                 + " до версии " + newVersion + ", которое удалит все старые данные");
-        // Удаляем предыдущую таблицу при апгрейде
-        db.execSQL(Coasts.SQL_DELETE_ENTRIES);
 
-        db.execSQL(Categories.SQL_DELETE_ENTRIES);
+        if(oldVersion < 19)
+        {
+            // Удаляем предыдущую таблицу при апгрейде
+            db.execSQL(Coasts.SQL_DELETE_ENTRIES);
 
-        db.execSQL(SettingsTable.SQL_DELETE_ENTRIES);
+            db.execSQL(Categories.SQL_DELETE_ENTRIES);
 
-        // Создаём новый экземпляр таблицы
-        onCreate(db);
+            db.execSQL(SettingsTable.SQL_DELETE_ENTRIES);
+
+            // Создаём новый экземпляр таблицы
+            onCreate(db);
+        }
+
+        switch(oldVersion) {
+            case 19:
+                break;
+        }
+
+
     }
 }
