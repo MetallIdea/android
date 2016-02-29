@@ -7,6 +7,14 @@
     android:padding="5dp">
         <ListView
             android:id="@+id/categoriesView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"></ListView>
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="left">
+        </ListView>
+    <ListView
+        android:id="@+id/categoriesView1"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="right">
+    </ListView>
 </RelativeLayout>

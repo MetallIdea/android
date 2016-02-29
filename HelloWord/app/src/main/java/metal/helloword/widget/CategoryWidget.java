@@ -67,6 +67,11 @@ public class CategoryWidget extends AppWidgetProvider {
         Log.d(LOG_TAG, "onDisabled");
     }
 
+    /**
+     * Получили событие
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -88,6 +93,12 @@ public class CategoryWidget extends AppWidgetProvider {
         }
     }
 
+    /**
+     * Обновить виджет
+     * @param context Контекст программы
+     * @param appWidgetManager Управление виджетами
+     * @param appWidgetId id текущего виджета
+     */
     void updateWidget(Context context, AppWidgetManager appWidgetManager,
                       int appWidgetId) {
         RemoteViews rv = new RemoteViews(context.getPackageName(),

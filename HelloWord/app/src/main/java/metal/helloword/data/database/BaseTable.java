@@ -13,6 +13,16 @@ import metal.helloword.data.AppContext;
  */
 public abstract class BaseTable implements BaseColumns {
 
+    public static final String FIELD_CREATED = "created";
+
+    public static final String FIELD_DELETED = "deleted";
+
+    public static final String FIELD_MODIFY = "modify";
+
+    public static final String FIELD_ADDITIONALS = "additionals";
+
+    public abstract String getTableName();
+
     public SQLiteDatabase DataBase;
 
     public BaseTable() {
@@ -23,7 +33,17 @@ public abstract class BaseTable implements BaseColumns {
         DataBase = dataBase;
     }
 
-    public abstract void createTable();
+    public void createTable() {
+        query("CREATE TABLE " +
+                this.getTableName() + " (" +
+                _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                FIELD_CREATED + " DATETIME," +
+                FIELD_DELETED + " DATETIME," +
+                FIELD_MODIFY + " DATETIME," +
+                FIELD_ADDITIONALS + " VARCHAR(2000)" + this.getCreateFields() + ")");
+    }
+
+    public abstract String getCreateFields();
 
     public void query(String sqlQuery){
         DataBase.execSQL(sqlQuery);

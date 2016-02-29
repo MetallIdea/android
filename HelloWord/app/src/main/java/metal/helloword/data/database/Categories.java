@@ -18,14 +18,6 @@ public class Categories extends BaseTable {
 
     public static final String FIELD_HIT_COUNTS = "hit_counts";
 
-    public static final String SQL_CREATE_ENTRIES = "CREATE TABLE " +
-            TABLE_NAME + " (" +
-            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            FIELD_NAME + " VARCHAR(1000)," +
-            FIELD_PRIORITY + " INTEGER," +
-            FIELD_HIT_COUNTS + " INTEGER" +
-            ");";
-
     public static final String SQL_INSERT_VALUES = "INSERT INTO " +
             TABLE_NAME + " VALUES (null, '%1$s', 0, 0);";
 
@@ -44,8 +36,20 @@ public class Categories extends BaseTable {
     }
 
     @Override
+    public String getTableName() {
+        return TABLE_NAME;
+    }
+
+    @Override
+    public String getCreateFields() {
+        return FIELD_NAME + " VARCHAR(1000)," +
+            FIELD_PRIORITY + " INTEGER," +
+            FIELD_HIT_COUNTS + " INTEGER, ";
+    }
+
+    @Override
     public void createTable() {
-        query(SQL_CREATE_ENTRIES);
+        super.createTable();
 
         query(String.format(SQL_INSERT_VALUES, "Машина"));
 
@@ -67,6 +71,22 @@ public class Categories extends BaseTable {
 
         Cursor cursor = GetItems(TABLE_NAME, new String[] {
                 _ID, FIELD_NAME, FIELD_PRIORITY, FIELD_HIT_COUNTS }, null, null, null);
+
+        while (cursor.moveToNext()){
+            categories.add(new Category(cursor));
+        }
+
+        cursor.close();
+
+        return categories;
+    }
+
+    public ArrayList<Category> GetByName(String name){
+
+        ArrayList<Category> categories = new ArrayList<>();
+
+        Cursor cursor = GetItems(TABLE_NAME, new String[] {
+                _ID, FIELD_NAME, FIELD_PRIORITY, FIELD_HIT_COUNTS }, FIELD_NAME + " LIKE ?", new String[] { "%"+ name + "%" }, null);
 
         while (cursor.moveToNext()){
             categories.add(new Category(cursor));
